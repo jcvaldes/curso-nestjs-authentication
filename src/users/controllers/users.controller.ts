@@ -25,7 +25,10 @@ export class UsersController {
   get(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.findOne(id);
   }
-
+  @Get('tasks')
+  getTasks() {
+    return this.usersService.getTasks();
+  }
   @Get(':id/orders')
   getOrders(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.getOrderByUser(id);

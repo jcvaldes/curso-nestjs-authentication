@@ -12,7 +12,7 @@ export class CreateCustomerDto {
   @ApiProperty({ description: 'apellido del cliente' })
   readonly lastName: string;
 
-  @IsPhoneNumber()
+  // @IsPhoneNumber()
   @IsNotEmpty()
   readonly phone: string;
 }
