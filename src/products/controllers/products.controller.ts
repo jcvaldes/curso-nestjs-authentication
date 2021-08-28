@@ -10,6 +10,7 @@ import {
   HttpStatus,
   HttpCode,
   Res,
+  UseGuards,
   // ParseIntPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -18,12 +19,27 @@ import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ParseIntPipe } from '../../common/parse-int.pipe';
 
 import { ProductsService } from './../services/products.service';
-import { CreateProductDto, UpdateProductDto, FilterProductsDto } from '../dtos/product.dtos';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+  FilterProductsDto,
+} from '../dtos/product.dtos';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/models/role.model';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+
+// usa la estrategia de jwt strategy
+// @UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard, RolesGuard) //cualquier endpoint que tenga el decorador Public lo deja pasar
 @ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'List of products' })
   // getProducts(
@@ -48,6 +64,7 @@ export class ProductsController {
     return `yo soy un filter`;
   }
 
+  @Public()
   @Get(':productId')
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('productId', ParseIntPipe) productId: number) {
@@ -57,6 +74,7 @@ export class ProductsController {
     return this.productsService.findOne(productId);
   }
 
+  @Roles(Role.ADMIN)
   @Post()
   create(@Body() payload: CreateProductDto) {
     return this.productsService.create(payload);

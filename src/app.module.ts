@@ -10,6 +10,7 @@ import { DatabaseModule } from './database/database.module';
 import { enviroments } from './enviroments';
 import config from './config';
 import { Client } from 'pg';
+import { AuthModule } from './auth/auth.module';
 
 // const API_KEY = '1234556';
 // const client = new Client({
@@ -33,7 +34,8 @@ import { Client } from 'pg';
       load: [config],
       // validacion de esquema para variables que nos llegan desde el servidor ej gitlab
       validationSchema: Joi.object().keys({
-        API_KEY: Joi.number().required(),
+        API_KEY: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
         DATABASE_PORT: Joi.number().required(),
         POSTGRES_DB: Joi.string().required(),
@@ -47,6 +49,7 @@ import { Client } from 'pg';
     UsersModule,
     ProductsModule,
     DatabaseModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -15,8 +16,12 @@ export class User {
   id: number;
   @Column({ type: 'varchar', length: 50, unique: true })
   email: string;
+
+  // Exclude the password from the json response
+  @Exclude()
   @Column({ type: 'varchar', length: 255 })
   password: string;
+  
   @Column({ type: 'varchar', length: 20 })
   role: string;
 

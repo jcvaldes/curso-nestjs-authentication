@@ -16,7 +16,13 @@ export class OrdersService {
   findAll() {
     return this.orderRepo.find();
   }
-
+  ordersByCustomer(customerId: number) {
+    return this.orderRepo.find({
+      where: {
+        customer: customerId,
+      },
+    });
+  }
   async findOne(id: number) {
     const order = await this.orderRepo.findOne(id, {
       relations: ['items', 'items.product'],
